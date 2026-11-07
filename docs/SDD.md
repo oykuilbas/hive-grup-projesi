@@ -49,12 +49,12 @@ flowchart LR
 | Module | Main components | Implements requirements |
 |---|---|---|
 | M1 | Frontend: `LoginPage`, `AuthContext`, `ProtectedRoute`. Backend: `authRoutes`, `authService`, `authMiddleware` (`requireAuth`, `requireRole`), `users` table. | FR-M1-01 … FR-M1-07 |
-| M2 | | |
+| M2 | Frontend: `LinkedSpecialistsPage` (parent), `MyChildrenPage` (specialist). Backend: `linkRoutes`, `linkService`, `accessMiddleware` (`canAccessChild`), `specialist_child_links` table. | FR-M2-01 … FR-M2-07 |
 | M3 | Frontend: `WeeklySchedule`, `AddEventForm`. Backend: `eventRoutes`, `eventService`, `events` table. | FR-M3-01 … FR-M3-05 |
 | M4 | Frontend: `TaskForm`, `ChildTasksPage`, `AssignedTasksPage`. Backend: `taskRoutes`, `taskService`, `tasks` table. | FR-M4-01 … FR-M4-07 |
 | M5 | Frontend: `ObservationList`, `ObservationForm`. Backend: `observationRoutes`, `observationService`, `observations` table. | FR-M5-01 … FR-M5-06 |
-| M6 | | |
-| M7 | | |
+| M6 | Frontend: `DocumentsPage`, `UploadForm`. Backend: `documentRoutes` (multer), `documentService`, `documents` table, uploads folder. | FR-M6-01 … FR-M6-05 |
+| M7 | Frontend: `WeeklyStats`. Backend: `statsRoutes`, `statsService.calculateWeeklyStats` (pure function, unit tested). | FR-M7-01 … FR-M7-04 |
 | M8 | Frontend: `AiSummaryPanel`, `FeedbackButtons`. Backend: `aiSummaryRoutes`, `aiService` with `geminiClient` and `mockClient` (selected by the `AI_MODE` setting), parent and specialist prompts, `ai_summaries` and `ai_feedback` tables. | FR-M8-01 … FR-M8-09 |
 
 ---
@@ -191,7 +191,10 @@ All endpoints except login require a valid JWT. For every endpoint that contains
 
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
-
+| GET | /api/children | List the children the user may access | All roles |
+| GET | /api/children/:childId/links | List linked specialists | Parent |
+| POST | /api/children/:childId/links | Link a specialist by email and type | Parent |
+| DELETE | /api/children/:childId/links/:specialistId | Unlink a specialist | Parent |
 ### M3 – Weekly schedule
 
 | Method | Endpoint | Description | Access |
@@ -218,11 +221,15 @@ All endpoints except login require a valid JWT. For every endpoint that contains
 
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
-
+| GET | /api/children/:childId/documents | List documents | Parent, linked specialist |
+| POST | /api/children/:childId/documents | Upload a document (multipart) | Parent, linked specialist |
+| GET | /api/documents/:documentId/view | View a document in the browser | Parent, linked specialist |
+| GET | /api/documents/:documentId/download | Download a document | Parent, linked specialist |
 ### M7 – Weekly statistics
 
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
+| GET | /api/children/:childId/stats?week=YYYY-MM-DD | Weekly completion rate, total and by area | Parent, linked specialist |
 
 ### M8 – Role-based AI summary
 
@@ -274,6 +281,31 @@ sequenceDiagram
 ```
 
 ### Flow 2: An unlinked specialist loses access
+
+```mermaid
+sequenceDiagram
+    actor Parent
+    actor Specialist
+    participant FE as React
+    participant API as Express API
+    participant DB as SQLite
+
+    Note over Specialist: Already logged in with a JWT that has not expired
+    Parent->>FE: Unlink specialist and confirm
+    FE->>API: DELETE /api/children/12/links/7 with JWT
+    Note over API: Verify JWT, check that the user is the parent of child 12
+    API->>DB: Delete link row
+    API-->>FE: 204 No Content
+    FE-->>Parent: Specialist removed from the list
+
+    Specialist->>FE: Open the child's tasks
+    FE->>API: GET /api/children/12/tasks with the old JWT
+    Note over API: JWT is valid, now check the current link
+    API->>DB: Select link for specialist 7 and child 12
+    DB-->>API: No row
+    API-->>FE: 403 Forbidden
+    FE-->>Specialist: Access denied message, no child data shown
+```
 
 ### Flow 3: The parent views weekly statistics and the AI summary
 
