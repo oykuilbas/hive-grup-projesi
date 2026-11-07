@@ -201,3 +201,4 @@ flowchart LR
 
 | Date | Change | By |
 |---|---|---|
+| 2026-11-07 | First version | Hive team |
