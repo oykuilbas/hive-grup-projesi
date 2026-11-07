@@ -50,8 +50,8 @@ flowchart LR
 |---|---|---|
 | M1 | Frontend: `LoginPage`, `AuthContext`, `ProtectedRoute`. Backend: `authRoutes`, `authService`, `authMiddleware` (`requireAuth`, `requireRole`), `users` table. | FR-M1-01 … FR-M1-07 |
 | M2 | | |
-| M3 | | |
-| M4 | | |
+| M3 | Frontend: `WeeklySchedule`, `AddEventForm`. Backend: `eventRoutes`, `eventService`, `events` table. | FR-M3-01 … FR-M3-05 |
+| M4 | Frontend: `TaskForm`, `ChildTasksPage`, `AssignedTasksPage`. Backend: `taskRoutes`, `taskService`, `tasks` table. | FR-M4-01 … FR-M4-07 |
 | M5 | Frontend: `ObservationList`, `ObservationForm`. Backend: `observationRoutes`, `observationService`, `observations` table. | FR-M5-01 … FR-M5-06 |
 | M6 | | |
 | M7 | | |
@@ -196,11 +196,15 @@ All endpoints except login require a valid JWT. For every endpoint that contains
 
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
+| GET | /api/children/:childId/events?week=YYYY-MM-DD | List events of the selected week | Parent, linked specialist, child |
+| POST | /api/children/:childId/events | Add an event | Parent, linked specialist |
 
 ### M4 – Tasks
 
 | Method | Endpoint | Description | Access |
 |---|---|---|---|
+| GET | /api/children/:childId/events?week=YYYY-MM-DD | List events of the selected week | Parent, linked specialist, child |
+| POST | /api/children/:childId/events | Add an event | Parent, linked specialist |
 
 ### M5 – Specialist entries
 
@@ -233,9 +237,72 @@ All endpoints except login require a valid JWT. For every endpoint that contains
 
 ### Flow 1: A specialist assigns a task and the child completes it
 
+```mermaid
+sequenceDiagram
+    actor Specialist
+    actor Child
+    participant FE as React
+    participant API as Express API
+    participant DB as SQLite
+
+    Specialist->>FE: Fill in task form and save
+    FE->>API: POST /api/children/12/tasks with JWT
+    Note over API: Verify JWT and role, check link (FR-M2-07), validate data
+    API->>DB: Insert task with status Pending
+    DB-->>API: Saved task
+    API-->>FE: 201 Created with task
+    FE-->>Specialist: Task shown as Pending
+
+    Child->>FE: Log in and open My tasks
+    FE->>API: GET /api/children/12/tasks with JWT
+    Note over API: Verify JWT, check that the user is child 12
+    API->>DB: Select tasks of child 12
+    DB-->>API: Tasks
+    API-->>FE: 200 OK with tasks
+    FE-->>Child: Task shown as Pending
+    Child->>FE: Mark task as done
+    FE->>API: PATCH /api/tasks/45/complete with JWT
+    Note over API: Verify JWT, check that task 45 belongs to this child
+    API->>DB: Update status to Completed
+    API-->>FE: 200 OK with updated task
+
+    Specialist->>FE: Open assigned tasks
+    FE->>API: GET /api/tasks/assigned with JWT
+    API->>DB: Select tasks assigned by this specialist
+    API-->>FE: 200 OK with tasks
+    FE-->>Specialist: Task shown as Completed
+```
+
 ### Flow 2: An unlinked specialist loses access
 
 ### Flow 3: The parent views weekly statistics and the AI summary
+
+```mermaid
+sequenceDiagram
+    actor Parent
+    participant FE as React
+    participant API as Express API
+    participant DB as SQLite
+    participant AI as AI module - mock mode
+
+    Parent->>FE: Open weekly dashboard
+    FE->>API: GET /api/children/12/stats?week=2026-11-02 with JWT
+    Note over API: Verify JWT, check that the user is the parent of child 12
+    API->>DB: Select tasks due in the selected week
+    DB-->>API: 5 tasks
+    Note over API: Calculate total and per-area rates in application code
+    API-->>FE: 200 OK with total 60, Language 100, Motor 33
+    FE-->>Parent: Statistics shown
+
+    Parent->>FE: Request AI summary
+    FE->>API: POST /api/children/12/ai-summaries with JWT
+    API->>DB: Select tasks and observations the parent may see
+    API->>AI: Parent prompt with allowed records
+    AI-->>API: Fixed sample summary
+    API->>DB: Save summary with source records
+    API-->>FE: 201 Created with summary and source links
+    FE-->>Parent: Summary labelled AI-generated with links to source records
+```
 
 ---
 
