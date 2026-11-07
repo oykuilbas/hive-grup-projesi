@@ -44,11 +44,23 @@ The system is a web-based decision support platform that brings a child's parent
 
 | ID | Requirement | Priority |
 |---|---|---|
+| FR-M3-01 | The system shall allow a parent or a linked specialist to add an event to the child's schedule with a title, date, start time and end time. | Must |
+| FR-M3-02 | The system shall reject an event with a missing title or an end time that is earlier than or equal to its start time and show an error message. | Must |
+| FR-M3-03 | The system shall list the child's events for a selected week (Monday to Sunday) in a weekly view, ordered by day and time. | Must |
+| FR-M3-04 | The system shall allow the user to move to the previous or next week in the weekly view. | Should |
+| FR-M3-05 | The system shall show the child their own weekly schedule without the option to add or change events. | Must |
 
 ### M4 – Tasks
 
 | ID | Requirement | Priority |
 |---|---|---|
+| FR-M4-01 | The system shall allow a parent or a linked specialist to assign a task to the child with a title, description, development area and due date. | Must |
+| FR-M4-02 | The system shall offer a fixed list of development areas: Language, Motor, Cognitive, Social-Emotional and Self-Care. | Must |
+| FR-M4-03 | The system shall reject a task with a missing title, development area or due date and show an error message. | Must |
+| FR-M4-04 | The system shall give every new task the status "Pending". | Must |
+| FR-M4-05 | The system shall show the child a list of their own tasks with title, description, development area, due date and status. | Must |
+| FR-M4-06 | The system shall allow the child to mark their own task as done, which changes its status to "Completed". | Must |
+| FR-M4-07 | The system shall show the user who assigned tasks a list of those tasks with their current status. | Must |
 
 ### M5 – Specialist entries
 
@@ -91,6 +103,11 @@ The system is a web-based decision support platform that brings a child's parent
 
 | ID | Category | Requirement |
 |---|---|---|
+| NFR-01 | Security | Passwords are stored only as bcrypt hashes; no plain-text password is stored or logged. |
+| NFR-02 | Security | Login tokens expire after 1 hour and contain no password or child record data. |
+| NFR-03 | Security | The AI provider's API key is stored only on the backend in an environment file that is excluded from Git; it never appears in frontend code or in the repository. |
+| NFR-04 | Privacy | The system uses only synthetic data created by the seed script; no real personal data is used at any stage. |
+| NFR-05 | Installability | The application shall be installable and runnable locally by following the README instructions, without requiring undocumented configuration steps. |
 
 ---
 
