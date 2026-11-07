@@ -39,7 +39,13 @@ The system is a web-based decision support platform that brings a child's parent
 
 | ID | Requirement | Priority |
 |---|---|---|
-
+| FR-M2-01 | The system shall allow a parent to link a registered specialist to their child by email and specialist type (teacher, psychologist, doctor, special education teacher or coach). | Must |
+| FR-M2-02 | The system shall show an error message when the entered email does not belong to a registered specialist. | Must |
+| FR-M2-03 | The system shall show the parent a list of the specialists linked to their child, with name, email and type. | Must |
+| FR-M2-04 | The system shall allow a parent to unlink a specialist after a confirmation step. | Must |
+| FR-M2-05 | The system shall show a specialist the list of children they are currently linked to. | Must |
+| FR-M2-06 | The system shall allow only the child's parent to link or unlink specialists. | Must |
+| FR-M2-07 | The system shall reject every API request about a child from a specialist who is not currently linked to that child, checking the current link on each request even if the user's token is still valid. | Must |
 ### M3 – Weekly schedule
 
 | ID | Requirement | Priority |
@@ -77,12 +83,19 @@ The system is a web-based decision support platform that brings a child's parent
 
 | ID | Requirement | Priority |
 |---|---|---|
-
+| FR-M6-01 | The system shall allow a parent or a linked specialist to upload a PDF or image file (JPG, PNG) for the child. | Must |
+| FR-M6-02 | The system shall reject a file of another type or larger than 10 MB and show an error message. | Must |
+| FR-M6-03 | The system shall show the parent and linked specialists a list of the child's documents with name, type, uploader and upload date. | Must |
+| FR-M6-04 | The system shall allow the parent and linked specialists to view and download a document. | Must |
+| FR-M6-05 | The system shall not show documents to the child, and shall reject the child's API requests for documents. | Must |
 ### M7 – Weekly statistics
 
 | ID | Requirement | Priority |
 |---|---|---|
-
+| FR-M7-01 | The system shall calculate the task completion rate for a selected week as the number of completed tasks due in that week divided by the total number of tasks due in that week, shown as a whole-number percentage rounded to the nearest integer. | Must |
+| FR-M7-02 | The system shall show the completion rate for each development area in the selected week. | Must |
+| FR-M7-03 | The system shall show "No tasks" instead of a rate when the selected week or development area has no tasks. | Must |
+| FR-M7-04 | The system shall show the weekly statistics to the parent and linked specialists. | Must |
 ### M8 – Role-based AI summary
 
 | ID | Requirement | Priority |
@@ -115,11 +128,72 @@ The system is a web-based decision support platform that brings a child's parent
 
 | Flow | Related requirements | Acceptance criteria |
 |---|---|---|
-
+| Flow 1: A specialist assigns a task and the child completes it | FR-M1-01, FR-M2-07, FR-M4-01, FR-M4-04, FR-M4-06, FR-M4-07 | *Given* a specialist linked to a child *When* the specialist assigns the task "Read for 20 minutes" and the child logs in and marks it as done *Then* the child first sees the task as "Pending", and the specialist then sees its status as "Completed". |
+| Flow 2: An unlinked specialist loses access | FR-M2-04, FR-M2-07 | *Given* a linked specialist who is logged in with a valid token *When* the parent unlinks the specialist and the specialist then requests the child's tasks *Then* the API returns HTTP 403 Forbidden and no child data is returned. |
+| Flow 3: The parent views weekly statistics and the AI summary | FR-M7-01, FR-M7-02, FR-M8-01, FR-M8-05, FR-M8-06, FR-M8-09 | *Given* a week with 5 tasks due (2 Language tasks, both completed; 3 Motor tasks, 1 completed) and the AI service in mock mode *When* the parent opens the weekly dashboard and requests the AI summary *Then* the total completion rate is shown as 60%, Language as 100% and Motor as 33%, and the summary is labelled "AI-generated" with links to its source records. |
 ---
 
 ## 5. Use Case Diagram
 
+```mermaid
+flowchart LR
+    P["Parent"]
+    S["Specialist"]
+    C["Child"]
+    AI["AI service - external"]
+
+    subgraph System["AI-Assisted Child Development Platform"]
+        UC1(["M1 · Log in"])
+        UC2(["M2 · Link or unlink a specialist"])
+        UC3(["M2 · View linked children"])
+        UC4(["M3 · Add a schedule event"])
+        UC5(["M3 · View weekly schedule"])
+        UC6(["M4 · Assign a task"])
+        UC7(["M4 · Mark a task as done"])
+        UC8(["M4 · View tasks and status"])
+        UC9(["M5 · Add or edit an observation"])
+        UC10(["M5 · View observations"])
+        UC11(["M6 · Manage documents: upload, list, view, download"])
+        UC12(["M7 · View weekly statistics"])
+        UC13(["M8 · Request AI summary"])
+        UC14(["M8 · Give feedback on a summary"])
+    end
+
+    classDef actor stroke-width:2px,font-weight:bold
+    class P,S,C,AI actor
+
+    P --- UC1
+    P --- UC2
+    P --- UC4
+    P --- UC5
+    P --- UC6
+    P --- UC8
+    P --- UC10
+    P --- UC11
+    P --- UC12
+    P --- UC13
+    P --- UC14
+
+    S --- UC1
+    S --- UC3
+    S --- UC4
+    S --- UC5
+    S --- UC6
+    S --- UC8
+    S --- UC9
+    S --- UC10
+    S --- UC11
+    S --- UC12
+    S --- UC13
+    S --- UC14
+
+    C --- UC1
+    C --- UC5
+    C --- UC7
+    C --- UC8
+
+    UC13 --- AI
+    ```
 ---
 
 ## 6. Change Log
