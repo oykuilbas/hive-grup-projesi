@@ -143,23 +143,23 @@ flowchart LR
     AI["AI service - external"]
 
     subgraph System["AI-Assisted Child Development Platform"]
-        UC1(["M1 · Log in"])
-        UC2(["M2 · Link or unlink a specialist"])
-        UC3(["M2 · View linked children"])
-        UC4(["M3 · Add a schedule event"])
-        UC5(["M3 · View weekly schedule"])
-        UC6(["M4 · Assign a task"])
-        UC7(["M4 · Mark a task as done"])
-        UC8(["M4 · View tasks and status"])
-        UC9(["M5 · Add or edit an observation"])
-        UC10(["M5 · View observations"])
-        UC11(["M6 · Manage documents: upload, list, view, download"])
-        UC12(["M7 · View weekly statistics"])
-        UC13(["M8 · Request AI summary"])
-        UC14(["M8 · Give feedback on a summary"])
+        UC1(["M1 - Log in"])
+        UC2(["M2 - Link or unlink a specialist"])
+        UC3(["M2 - View linked children"])
+        UC4(["M3 - Add a schedule event"])
+        UC5(["M3 - View weekly schedule"])
+        UC6(["M4 - Assign a task"])
+        UC7(["M4 - Mark a task as done"])
+        UC8(["M4 - View tasks and status"])
+        UC9(["M5 - Add or edit an observation"])
+        UC10(["M5 - View observations"])
+        UC11(["M6 - Manage documents: upload, list, view, download"])
+        UC12(["M7 - View weekly statistics"])
+        UC13(["M8 - Request AI summary"])
+        UC14(["M8 - Give feedback on a summary"])
     end
 
-    classDef actor stroke-width:2px,font-weight:bold
+    classDef actor stroke-width:2px
     class P,S,C,AI actor
 
     P --- UC1
@@ -193,7 +193,8 @@ flowchart LR
     C --- UC8
 
     UC13 --- AI
-    ```
+```
+
 ---
 
 ## 6. Change Log
