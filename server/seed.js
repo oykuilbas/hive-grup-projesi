@@ -17,7 +17,7 @@ const DEMO_USERS = {
 // Tables are emptied children-first so that foreign keys are never broken.
 // When you add a table that references users or children, delete from it here
 // before the existing lines.
-const TABLES_IN_DELETE_ORDER = ['links', 'tasks', 'children', 'users'];
+const TABLES_IN_DELETE_ORDER = ['events','links', 'tasks', 'children', 'users'];
 
 function seedDatabase() {
   const passwordHash = bcrypt.hashSync(DEMO_PASSWORD, 10);
