@@ -40,14 +40,16 @@ function seedDatabase() {
     const childId = db
       .prepare('INSERT INTO children (name, birth_date, parent_id, user_id) VALUES (?, ?, ?, ?)')
       .run('Deniz Yılmaz', '2017-05-14', ids.parent, ids.child).lastInsertRowid;
-
-    seedLinks(db, { childId, userIds: ids });
-
-    db.prepare('INSERT INTO tasks (child_id, title, status) VALUES (?, ?, ?)').run(
-      childId,
-      'Read for 20 minutes',
-      'Pending'
-    );
+    
+seedLinks(db, { childId, userIds: ids });
+    db.prepare(
+  'INSERT INTO tasks (child_id, title, status, assigned_by) VALUES (?, ?, ?, ?)'
+).run(
+  childId,
+  'Read for 20 minutes',
+  'Pending',
+  ids.parent
+);
 
     return { userIds: ids, childId };
   });
