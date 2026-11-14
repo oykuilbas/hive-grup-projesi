@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./db');
 const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 const { requireAuth } = require('./middleware/authMiddleware');
 const { createM2Router } = require('./routes/m2Routes');
 
@@ -17,6 +18,7 @@ app.get('/api/health', (req, res) => {
 
 // M1 – Login and roles
 app.use('/api/auth', authRoutes);
+app.use('/api/children', taskRoutes);
 
 // M2 – child listing and parent-managed specialist links.
 app.use('/api', createM2Router({ db, requireAuth }));
