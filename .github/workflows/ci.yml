@@ -9,7 +9,7 @@ on:
 
 jobs:
   server:
-    name: Server (seed + API smoke test)
+    name: Server (API tests + seed + smoke test)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -25,6 +25,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run API tests (Jest + Supertest)
+        run: npm test
 
       - name: Create database with sample data
         run: npm run seed
