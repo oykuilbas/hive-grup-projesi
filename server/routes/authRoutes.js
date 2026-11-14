@@ -1,5 +1,6 @@
 const express = require('express');
 const authService = require('../services/authService');
+const { requireAuth } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -18,6 +19,12 @@ router.post('/login', (req, res) => {
   }
 
   res.json(result);
+});
+
+// GET /api/auth/me – the logged-in user's name and role (SDD Section 4).
+// The frontend uses it to restore the session after a page refresh.
+router.get('/me', requireAuth, (req, res) => {
+  res.json(req.user);
 });
 
 module.exports = router;

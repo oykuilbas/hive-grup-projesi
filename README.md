@@ -80,6 +80,9 @@ The backend runs without any configuration. To override the defaults, copy `serv
 |---|---|---|
 | GET | /api/health | Returns `{ "status": "ok" }` when the backend is running |
 | POST | /api/auth/login | Log in with `{ "email", "password" }`; returns `{ token, user }`. Wrong credentials return 401 |
+| GET | /api/auth/me | Returns the logged-in user (`id`, `name`, `role`, and `childId` for a child) |
+
+Protected endpoints need the header `Authorization: Bearer <token>`. Without a valid token they return 401; with the wrong role they return 403.
 | GET | /api/tasks | Returns all tasks from the database (walking skeleton) |
 
 ## Workflow
@@ -94,3 +97,4 @@ The backend runs without any configuration. To override the defaults, copy `serv
 - [Software Requirements Specification](docs/SRS.md)
 - [Software Design Document](docs/SDD.md)
 - [Project Management Plan](docs/PMP.md)
+- [Team Conventions](docs/CONVENTIONS.md)
