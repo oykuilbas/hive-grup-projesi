@@ -10,6 +10,7 @@ export default function LinkedSpecialistsPage() {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [actionError, setActionError] = useState('');
   const [busy, setBusy] = useState(false);
   const [email, setEmail] = useState('');
   const [type, setType] = useState(TYPES[0]);
@@ -32,6 +33,7 @@ export default function LinkedSpecialistsPage() {
   }
 
   useEffect(() => {
+    setActionError('');
     load();
     return () => { loadVersion.current += 1; };
   }, [childId]);
@@ -39,23 +41,23 @@ export default function LinkedSpecialistsPage() {
   async function addLink(event) {
     event.preventDefault();
     setBusy(true);
-    setError('');
+    setActionError('');
     try {
       await api.post(`/children/${encodeURIComponent(childId)}/links`, { email, specialist_type: type });
       setEmail('');
       if (currentChildId.current === childId) await load();
-    } catch (err) { if (currentChildId.current === childId) setError(err.message); }
+    } catch (err) { if (currentChildId.current === childId) setActionError(err.message); }
     finally { setBusy(false); }
   }
 
   async function unlink(specialist) {
     if (!window.confirm(`Unlink ${specialist.name}?`)) return;
     setBusy(true);
-    setError('');
+    setActionError('');
     try {
       await api.delete(`/children/${encodeURIComponent(childId)}/links/${specialist.specialist_id}`);
       if (currentChildId.current === childId) await load();
-    } catch (err) { if (currentChildId.current === childId) setError(err.message); }
+    } catch (err) { if (currentChildId.current === childId) setActionError(err.message); }
     finally { setBusy(false); }
   }
 
@@ -64,6 +66,7 @@ export default function LinkedSpecialistsPage() {
     <h1>Linked specialists</h1>
     {loading && <p>Loading specialists...</p>}
     {error && <p className="form-error" role="alert">{error}</p>}
+    {actionError && <p className="form-error" role="alert">{actionError}</p>}
     {!loading && !error && links.length === 0 && <p>No specialists are linked to this child yet.</p>}
     {!loading && !error && links.length > 0 && <ul className="m2-list">{links.map((link) => <li key={link.id}>
       <span className="m2-link-details">
