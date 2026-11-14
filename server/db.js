@@ -32,15 +32,18 @@ db.exec(`
   )
 `);
 
-// Skeleton version of the tasks table.
-// The full table (area, due date, etc.) comes in HIVE-79.
+// M4 - Tasks table (HIVE-79)
 db.exec(`
   CREATE TABLE IF NOT EXISTS tasks (
-    id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    child_id INTEGER NOT NULL,
-    title    TEXT    NOT NULL,
-    status   TEXT    NOT NULL DEFAULT 'Pending'
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    child_id    INTEGER NOT NULL REFERENCES children(id),
+    title       TEXT NOT NULL,
+    area        TEXT,
+    due_date    TEXT,
+    status      TEXT NOT NULL DEFAULT 'Pending'
+                CHECK (status IN ('Pending', 'Completed'))
   )
 `);
+  
 
 module.exports = db;
