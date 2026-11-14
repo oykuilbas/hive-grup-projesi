@@ -32,6 +32,24 @@ db.exec(`
   )
 `);
 
+// M2 – Existing preliminary links tables are retained, never rebuilt here.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS links (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    child_id INTEGER NOT NULL REFERENCES children(id) ON DELETE CASCADE,
+    specialist_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    specialist_type TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(child_id, specialist_id)
+  )
+`);
+
+// Add the type to preliminary databases without deleting any existing links.
+const linkColumns = db.pragma('table_info(links)');
+if (!linkColumns.some((column) => column.name === 'specialist_type')) {
+  db.exec('ALTER TABLE links ADD COLUMN specialist_type TEXT');
+}
+
 // Skeleton version of the tasks table.
 // The full table (area, due date, etc.) comes in HIVE-79.
 db.exec(`

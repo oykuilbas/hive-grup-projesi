@@ -1,6 +1,8 @@
 const express = require('express');
 const db = require('./db');
 const authRoutes = require('./routes/authRoutes');
+const { requireAuth } = require('./middleware/authMiddleware');
+const { createM2Router } = require('./routes/m2Routes');
 
 // The app is created here and started in index.js, so that API tests
 // (Jest + Supertest) can use the app without opening a port.
@@ -15,6 +17,9 @@ app.get('/api/health', (req, res) => {
 
 // M1 – Login and roles
 app.use('/api/auth', authRoutes);
+
+// M2 – child listing and parent-managed specialist links.
+app.use('/api', createM2Router({ db, requireAuth }));
 
 // Walking skeleton: return all tasks from the database.
 // Access checks are added with M4 (HIVE-80).

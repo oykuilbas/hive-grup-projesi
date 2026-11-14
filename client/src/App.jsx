@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage';
 import ParentHome from './pages/ParentHome';
 import SpecialistHome from './pages/SpecialistHome';
 import ChildHome from './pages/ChildHome';
+import LinkedSpecialistsPage from './pages/LinkedSpecialistsPage';
+import MyChildrenPage from './pages/MyChildrenPage';
 
 // Every page except login is inside <Layout> and protected by role.
 // To add a page, add a <Route> in the right role's group, for example:
@@ -24,6 +26,14 @@ function App() {
         <Route
           path="/specialist"
           element={<ProtectedRoute roles={['specialist']}><SpecialistHome /></ProtectedRoute>}
+        />
+        <Route
+          path="/parent/children/:childId/specialists"
+          element={<ProtectedRoute roles={['parent']}><LinkedSpecialistsPage /></ProtectedRoute>}
+        />
+        <Route
+          path="/specialist/children"
+          element={<ProtectedRoute roles={['specialist']}><MyChildrenPage /></ProtectedRoute>}
         />
         <Route
           path="/child"
