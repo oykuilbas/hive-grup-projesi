@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const db = require('./db');
+const { seedLinks } = require('./seedLinks');
 
 // Synthetic demo data only (NFR-04). Every account uses the same password.
 const DEMO_PASSWORD = 'Hive2026!';
@@ -16,7 +17,7 @@ const DEMO_USERS = {
 // Tables are emptied children-first so that foreign keys are never broken.
 // When you add a table that references users or children, delete from it here
 // before the existing lines.
-const TABLES_IN_DELETE_ORDER = ['tasks', 'children', 'users'];
+const TABLES_IN_DELETE_ORDER = ['links', 'tasks', 'children', 'users'];
 
 function seedDatabase() {
   const passwordHash = bcrypt.hashSync(DEMO_PASSWORD, 10);
@@ -39,7 +40,8 @@ function seedDatabase() {
     const childId = db
       .prepare('INSERT INTO children (name, birth_date, parent_id, user_id) VALUES (?, ?, ?, ?)')
       .run('Deniz Yılmaz', '2017-05-14', ids.parent, ids.child).lastInsertRowid;
-
+    
+seedLinks(db, { childId, userIds: ids });
     db.prepare(
   'INSERT INTO tasks (child_id, title, status, assigned_by) VALUES (?, ?, ?, ?)'
 ).run(

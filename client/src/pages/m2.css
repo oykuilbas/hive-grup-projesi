@@ -1,0 +1,39 @@
+.m2-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.m2-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.5rem;
+}
+
+.m2-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.m2-link-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.m2-link-details .muted {
+  margin: 0;
+}
+
+.m2-form {
+  max-width: 420px;
+}
+
+.m2-form .primary {
+  margin-top: 1rem;
+}
