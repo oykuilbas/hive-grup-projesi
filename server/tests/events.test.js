@@ -113,4 +113,34 @@ test('Only events from the selected week are returned', async () => {
   expect(response.body).toHaveLength(1);
   expect(response.body[0].event_date).toBe('2026-11-16');
 });
+test('Rejects invalid event date', async () => {
+  const token = await tokenFor('parent');
+
+  const response = await request(app)
+    .post(`/api/children/${ids.childId}/events`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      title: 'Math lesson',
+      event_date: '2026-02-30',
+      start_time: '14:00',
+      end_time: '15:00'
+    });
+
+  expect(response.status).toBe(400);
+});
+test('Rejects invalid time format', async () => {
+  const token = await tokenFor('parent');
+
+  const response = await request(app)
+    .post(`/api/children/${ids.childId}/events`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      title: 'Math lesson',
+      event_date: '2026-11-16',
+      start_time: '25:00',
+      end_time: '26:00'
+    });
+
+  expect(response.status).toBe(400);
+});
 });

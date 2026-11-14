@@ -21,7 +21,24 @@ router.post('/:childId/events', requireAuth, canAccessChild, (req, res) => {
         error: 'All event fields are required'
       });
     }
+const date = new Date(`${event_date}T00:00:00Z`);
 
+if (
+  !/^\d{4}-\d{2}-\d{2}$/.test(event_date) ||
+  Number.isNaN(date.getTime()) ||
+  date.toISOString().slice(0, 10) !== event_date
+) {
+  return res.status(400).json({
+    error: 'Invalid event date'
+  });
+}
+const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+if (!timeRegex.test(start_time) || !timeRegex.test(end_time)) {
+  return res.status(400).json({
+    error: 'Invalid time format (HH:MM)'
+  });
+}
     if (end_time <= start_time) {
       return res.status(400).json({
         error: 'End time must be after start time'
