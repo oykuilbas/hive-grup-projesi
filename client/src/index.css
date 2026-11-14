@@ -1,0 +1,111 @@
+/* Shared styles for the whole app. Keep page-specific styles small and
+   reuse these classes (card, primary, muted, form-error) where possible. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #f3f4f6;
+  color: #1f2937;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.25rem;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 1.75rem;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  margin: 0.75rem 0 0.25rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #9ca3af;
+  border-radius: 6px;
+  font: inherit;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.55rem 1rem;
+  border: 1px solid #9ca3af;
+  background: #fff;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+button.primary {
+  background: #374151;
+  border-color: #374151;
+  color: #fff;
+}
+
+.form-error {
+  border: 1px dashed #b91c1c;
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+/* Login page */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-card button.primary {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.brand-logo {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #6b7280;
+  border-radius: 50%;
+}

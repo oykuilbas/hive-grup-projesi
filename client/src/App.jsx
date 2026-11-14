@@ -1,6 +1,22 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from './auth/AuthContext';
+import LoginPage from './pages/LoginPage';
 
+// Until the role pages arrive (HIVE-56), a logged-in user sees the
+// walking skeleton task list.
 function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+  if (!user) {
+    return <LoginPage />;
+  }
+  return <TaskList user={user} />;
+}
+
+function TaskList({ user }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -22,6 +38,9 @@ function App() {
   return (
     <main>
       <h1>Hive</h1>
+      <p>
+        Logged in as {user.name} ({user.role})
+      </p>
       <h2>Tasks</h2>
 
       {loading && <p>Loading tasks...</p>}
