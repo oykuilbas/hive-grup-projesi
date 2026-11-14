@@ -50,6 +50,17 @@ npm run dev
 
 Open http://localhost:5173 in your browser. The page shows the tasks loaded from the backend.
 
+## Demo accounts
+
+`npm run seed` creates these synthetic accounts. The password for all of them is `Hive2026!`.
+
+| Role | Email | Notes |
+|---|---|---|
+| Parent | parent@hive.test | Parent of the child Deniz Yılmaz |
+| Child | child@hive.test | Deniz Yılmaz's own account |
+| Specialist | teacher@hive.test | Linked to the child (the link is added by the M2 seed) |
+| Specialist | psychologist@hive.test | Not linked to the child; used to test that access is denied |
+
 ## Resetting the database
 
 The database contains only synthetic data. If the table structure changes in a later version, delete `server/hive.db` and run `npm run seed` again.
