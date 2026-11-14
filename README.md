@@ -65,12 +65,22 @@ Open http://localhost:5173 in your browser. The page shows the tasks loaded from
 
 The database contains only synthetic data. If the table structure changes in a later version, delete `server/hive.db` and run `npm run seed` again.
 
-## API (walking skeleton)
+## Configuration (optional)
+
+The backend runs without any configuration. To override the defaults, copy `server/.env.example` to `server/.env` and edit it. `.env` is ignored by Git and must never be committed.
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `JWT_SECRET` | a fixed development secret | Secret used to sign login tokens |
+| `PORT` | `3001` | Port of the API |
+
+## API
 
 | Method | Endpoint | Description |
 |---|---|---|
 | GET | /api/health | Returns `{ "status": "ok" }` when the backend is running |
-| GET | /api/tasks | Returns all tasks from the database |
+| POST | /api/auth/login | Log in with `{ "email", "password" }`; returns `{ token, user }`. Wrong credentials return 401 |
+| GET | /api/tasks | Returns all tasks from the database (walking skeleton) |
 
 ## Workflow
 
