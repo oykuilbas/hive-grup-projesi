@@ -66,6 +66,17 @@ db.exec(`
     completed_at     TEXT
   )
 `);
-  
+  // M3 – Weekly schedule events
+db.exec(`
+  CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    child_id INTEGER NOT NULL REFERENCES children(id),
+    title TEXT NOT NULL,
+    event_date TEXT NOT NULL,
+    start_time TEXT NOT NULL,
+    end_time TEXT NOT NULL,
+    created_by INTEGER NOT NULL REFERENCES users(id)
+  )
+`);
 
 module.exports = db;
