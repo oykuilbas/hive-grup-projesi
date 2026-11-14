@@ -1,8 +1,11 @@
 const express = require('express');
+const eventRoutes = require('./routes/eventRoutes');
 const db = require('./db');
+
 const authRoutes = require('./routes/authRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const { requireAuth } = require('./middleware/authMiddleware');
+
 const { createM2Router } = require('./routes/m2Routes');
 
 // The app is created here and started in index.js, so that API tests
@@ -19,6 +22,7 @@ app.get('/api/health', (req, res) => {
 // M1 – Login and roles
 app.use('/api/auth', authRoutes);
 app.use('/api/children', taskRoutes);
+app.use('/api/children', eventRoutes);
 
 // M2 – child listing and parent-managed specialist links.
 app.use('/api', createM2Router({ db, requireAuth }));
