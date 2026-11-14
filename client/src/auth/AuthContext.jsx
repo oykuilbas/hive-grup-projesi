@@ -40,8 +40,14 @@ export function AuthProvider({ children }) {
     return me;
   }
 
+  // Forget the token on this browser (FR-M1-07).
+  function logout() {
+    setToken(null);
+    setUser(null);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, login }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

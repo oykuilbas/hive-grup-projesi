@@ -1,67 +1,57 @@
-import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext';
+import { ROLE_HOME } from './auth/roles';
+import Layout from './components/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
+import ParentHome from './pages/ParentHome';
+import SpecialistHome from './pages/SpecialistHome';
+import ChildHome from './pages/ChildHome';
 
-// Until the role pages arrive (HIVE-56), a logged-in user sees the
-// walking skeleton task list.
+// Every page except login is inside <Layout> and protected by role.
+// To add a page, add a <Route> in the right role's group, for example:
+//   <Route path="/parent/specialists" element={<ProtectedRoute roles={['parent']}>...} />
 function App() {
-  const { user, loading } = useAuth();
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginRoute />} />
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-  if (!user) {
-    return <LoginPage />;
-  }
-  return <TaskList user={user} />;
+      <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+        <Route
+          path="/parent"
+          element={<ProtectedRoute roles={['parent']}><ParentHome /></ProtectedRoute>}
+        />
+        <Route
+          path="/specialist"
+          element={<ProtectedRoute roles={['specialist']}><SpecialistHome /></ProtectedRoute>}
+        />
+        <Route
+          path="/child"
+          element={<ProtectedRoute roles={['child']}><ChildHome /></ProtectedRoute>}
+        />
+      </Route>
+
+      <Route path="*" element={<HomeRedirect />} />
+    </Routes>
+  );
 }
 
-function TaskList({ user }) {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+// A logged-in user who opens /login goes to their own home page.
+function LoginRoute() {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <p className="page-message">Loading...</p>;
+  }
+  return user ? <Navigate to={ROLE_HOME[user.role]} replace /> : <LoginPage />;
+}
 
-  useEffect(() => {
-    // Ask the backend for the tasks stored in the database.
-    fetch('/api/tasks')
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Server returned ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => setTasks(data))
-      .catch(() => setError('Could not load tasks. Is the backend running?'))
-      .finally(() => setLoading(false));
-  }, []);
-
-  return (
-    <main>
-      <h1>Hive</h1>
-      <p>
-        Logged in as {user.name} ({user.role})
-      </p>
-      <h2>Tasks</h2>
-
-      {loading && <p>Loading tasks...</p>}
-
-      {error && <p role="alert">{error}</p>}
-
-      {!loading && !error && tasks.length === 0 && (
-        <p>No tasks yet. Run "npm run seed" in the server folder.</p>
-      )}
-
-      {!loading && !error && tasks.length > 0 && (
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.id}>
-              {task.title} – {task.status}
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
-  );
+// "/" and unknown addresses: home page of the role, or login.
+function HomeRedirect() {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <p className="page-message">Loading...</p>;
+  }
+  return <Navigate to={user ? ROLE_HOME[user.role] : '/login'} replace />;
 }
 
 export default App;

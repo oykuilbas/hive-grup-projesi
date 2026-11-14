@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { ROLE_HOME } from '../auth/roles';
 
 // M1 – Login with email and password (FR-M1-01, FR-M1-02).
 // There is no role selector: the role comes from the account (FR-M1-03).
+// After login the user goes to their role's home page (FR-M1-05).
 function LoginPage() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,7 +25,8 @@ function LoginPage() {
 
     setSubmitting(true);
     try {
-      await login(email, password);
+      const me = await login(email, password);
+      navigate(ROLE_HOME[me.role], { replace: true });
     } catch (err) {
       setError(
         err.status === 401

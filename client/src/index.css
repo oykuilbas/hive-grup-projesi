@@ -109,3 +109,35 @@ button.primary {
   border: 2px solid #6b7280;
   border-radius: 50%;
 }
+
+/* Pages after login */
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid #d1d5db;
+}
+
+.top-bar .brand {
+  margin-bottom: 0;
+}
+
+.top-bar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.page-message {
+  padding: 1.5rem;
+}
