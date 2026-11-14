@@ -48,7 +48,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173 in your browser. The page shows the tasks loaded from the backend.
+Open http://localhost:5173 in your browser and log in with one of the demo accounts below. Each role is taken to its own home page (`/parent`, `/specialist` or `/child`) and cannot open the pages of the other roles.
 
 ## Demo accounts
 
