@@ -4,10 +4,10 @@ const { requireAuth } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.use(requireAuth);
+
 
 // HIVE-81 – Complete a task
-router.patch('/:taskId/complete', (req, res) => {
+router.patch('/:taskId/complete', requireAuth, (req, res) => {
   try {
     const taskId = Number(req.params.taskId);
 
