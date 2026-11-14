@@ -50,6 +50,15 @@ npm run dev
 
 Open http://localhost:5173 in your browser and log in with one of the demo accounts below. Each role is taken to its own home page (`/parent`, `/specialist` or `/child`) and cannot open the pages of the other roles.
 
+## Running the tests
+
+```
+cd server
+npm test
+```
+
+`npm test` runs the backend API tests (Jest + Supertest) on a separate in-memory database, so your `hive.db` is not changed. `npm run test:coverage` also shows the code coverage. The same tests run in CI on every pull request.
+
 ## Demo accounts
 
 `npm run seed` creates these synthetic accounts. The password for all of them is `Hive2026!`.
