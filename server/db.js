@@ -33,15 +33,19 @@ db.exec(`
 `);
 
 // M4 - Tasks table (HIVE-79)
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS tasks (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    child_id    INTEGER NOT NULL REFERENCES children(id),
-    title       TEXT NOT NULL,
-    area        TEXT,
-    due_date    TEXT,
-    status      TEXT NOT NULL DEFAULT 'Pending'
-                CHECK (status IN ('Pending', 'Completed'))
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    child_id         INTEGER NOT NULL REFERENCES children(id),
+    title            TEXT NOT NULL,
+    description      TEXT,
+    development_area TEXT,
+    due_date         TEXT,
+    assigned_by      INTEGER NOT NULL REFERENCES users(id),
+    status           TEXT NOT NULL DEFAULT 'Pending'
+                     CHECK (status IN ('Pending', 'Completed')),
+    completed_at     TEXT
   )
 `);
   
