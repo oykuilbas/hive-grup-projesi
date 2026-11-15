@@ -73,7 +73,7 @@ if (!timeRegex.test(start_time) || !timeRegex.test(end_time)) {
   }
 });
 // M3 – List events for a child
-router.get('/:childId/events', requireAuth, canAccessChild, (req, res) => {
+router.get('/:childId/events', requireAuth, canAccessChild.allowChild, (req, res) => {
   try {
     const { weekStart } = req.query;
 
