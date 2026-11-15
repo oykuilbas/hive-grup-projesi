@@ -6,9 +6,9 @@ const canAccessChild = require('../middleware/canAccessChild');
 const router = express.Router();
 
 router.use(requireAuth);
-router.use('/:childId/tasks', canAccessChild);
+
 // M4 – List tasks for a child
-router.get('/:childId/tasks', (req, res) => {
+router.get('/:childId/tasks', canAccessChild.allowChild, (req, res) => {
   try {
     const tasks = db.prepare(`
       SELECT id, child_id, title, description,
@@ -26,7 +26,7 @@ router.get('/:childId/tasks', (req, res) => {
   }
 });
 // M4 – Create a task for a child
-router.post('/:childId/tasks', (req, res) => {
+router.post('/:childId/tasks', canAccessChild, (req, res) => {
   try {
     const childId = Number(req.params.childId);
     if (!['parent', 'specialist'].includes(req.user.role?.toLowerCase())) {
