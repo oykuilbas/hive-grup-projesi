@@ -79,4 +79,39 @@ test('Child cannot create a task', async () => {
 
   expect(response.status).toBe(403);
 });
+test('Child can complete their own task', async () => {
+  const parentToken = await tokenFor('parent');
+
+  const created = await request(app)
+    .post(`/api/children/${ids.childId}/tasks`)
+    .set('Authorization', `Bearer ${parentToken}`)
+    .send({ title: 'Complete homework' });
+
+  expect(created.status).toBe(201);
+
+  const childToken = await tokenFor('child');
+
+  const response = await request(app)
+    .patch(`/api/tasks/${created.body.id}/complete`)
+    .set('Authorization', `Bearer ${childToken}`);
+
+  expect(response.status).toBe(200);
+  expect(response.body.status).toBe('Completed');
+  expect(response.body.completed_at).not.toBeNull();
+});
+
+test('Parent cannot complete a task', async () => {
+  const parentToken = await tokenFor('parent');
+
+  const created = await request(app)
+    .post(`/api/children/${ids.childId}/tasks`)
+    .set('Authorization', `Bearer ${parentToken}`)
+    .send({ title: 'Test task' });
+
+  const response = await request(app)
+    .patch(`/api/tasks/${created.body.id}/complete`)
+    .set('Authorization', `Bearer ${parentToken}`);
+
+  expect(response.status).toBe(403);
+});
 });
