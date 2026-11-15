@@ -1,0 +1,27 @@
+{
+  "name": "hive-grup-projesi",
+  "version": "1.0.0",
+  "description": "Hive is a web-based decision support platform where parents and linked specialists share a child's weekly schedule, tasks and observations, with a role-based AI summary that supports decisions but never makes them.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oykuilbas/hive-grup-projesi.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/oykuilbas/hive-grup-projesi/issues"
+  },
+  "homepage": "https://github.com/oykuilbas/hive-grup-projesi#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
+}
