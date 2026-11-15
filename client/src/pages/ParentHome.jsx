@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../api';
 import { useAuth } from '../auth/AuthContext';
 import TaskForm from '../components/TaskForm';
+import AssignedTasks from '../components/AssignedTasks';
 
 // Parent home. The weekly dashboard is added by later module tasks.
 function ParentHome() {
@@ -36,6 +37,7 @@ function ParentHome() {
   <div key={`task-form-${child.id}`}>
     <h3>{child.name}</h3>
     <TaskForm childId={child.id} />
+    <AssignedTasks childId={child.id} />
   </div>
 ))}
       </div>
