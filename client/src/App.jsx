@@ -35,10 +35,29 @@ function App() {
         <Route
           path="/specialist/children"
           element={<ProtectedRoute roles={['specialist']}><MyChildrenPage /></ProtectedRoute>}
-        /><Route
+        />
+          <Route
   path="/parent/children/:childId/schedule"
   element={
     <ProtectedRoute roles={['parent']}>
+      <WeeklySchedulePage />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/specialist/children/:childId/schedule"
+  element={
+    <ProtectedRoute roles={['specialist']}>
+      <WeeklySchedulePage />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/child/children/:childId/schedule"
+  element={
+    <ProtectedRoute roles={['child']}>
       <WeeklySchedulePage />
     </ProtectedRoute>
   }
