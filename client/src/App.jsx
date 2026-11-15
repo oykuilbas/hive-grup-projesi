@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import WeeklySchedulePage from './pages/WeeklySchedulePage';
 import { useAuth } from './auth/AuthContext';
 import { ROLE_HOME } from './auth/roles';
 import Layout from './components/Layout';
@@ -34,7 +35,14 @@ function App() {
         <Route
           path="/specialist/children"
           element={<ProtectedRoute roles={['specialist']}><MyChildrenPage /></ProtectedRoute>}
-        />
+        /><Route
+  path="/parent/children/:childId/schedule"
+  element={
+    <ProtectedRoute roles={['parent']}>
+      <WeeklySchedulePage />
+    </ProtectedRoute>
+  }
+/>
         <Route
           path="/child"
           element={<ProtectedRoute roles={['child']}><ChildHome /></ProtectedRoute>}
