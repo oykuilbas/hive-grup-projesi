@@ -143,4 +143,48 @@ test('Rejects invalid time format', async () => {
 
   expect(response.status).toBe(400);
 });
+
+test('Linked specialist can create an event', async () => {
+  const token = await tokenFor('linkedSpecialist');
+
+  const response = await request(app)
+    .post(`/api/children/${ids.childId}/events`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      title: 'Speech therapy',
+      event_date: '2026-11-16',
+      start_time: '10:00',
+      end_time: '11:00'
+    });
+
+  expect(response.status).toBe(201);
+});
+
+test('Child can view their own weekly schedule', async () => {
+  const token = await tokenFor('child');
+
+  const response = await request(app)
+    .get(`/api/children/${ids.childId}/events?weekStart=2026-11-16`)
+    .set('Authorization', `Bearer ${token}`);
+
+  expect(response.status).toBe(200);
+  expect(Array.isArray(response.body)).toBe(true);
+});
+
+test('Child cannot create events', async () => {
+  const token = await tokenFor('child');
+
+  const response = await request(app)
+    .post(`/api/children/${ids.childId}/events`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      title: 'Unauthorized event',
+      event_date: '2026-11-16',
+      start_time: '10:00',
+      end_time: '11:00'
+    });
+
+  expect(response.status).toBe(403);
+});
+
 });
