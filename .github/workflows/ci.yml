@@ -47,13 +47,13 @@ jobs:
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 return res.json();
               })
-             .then((data) => {
-  console.log("Response:", JSON.stringify(data));
-  if (data.status !== "ok") {
-    throw new Error("Health check failed");
-  }
-  console.log("API smoke test passed");
-})
+                           .then((data) => {
+                console.log("Response:", JSON.stringify(data));
+                if (data.status !== "ok") {
+                  throw new Error("Health check failed");
+                }
+                console.log("API smoke test passed");
+              })
               .catch((err) => {
                 console.error(err.message);
                 process.exit(1);
