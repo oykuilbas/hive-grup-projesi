@@ -74,7 +74,7 @@ Documentation work is tracked in two additional epics: SRS (12 tasks) and DESIGN
 | M1 – Login and roles | Authentication, role-based access and initial tests for v0.1 | Done |
 | M2 – Linking specialists | Specialist linking and access control for v0.1 | Done |
 | M3 – Weekly schedule | Weekly events, schedule navigation and API tests for v0.1 | Done |
-| M4 – Tasks | Task management, API tests and Flow 1 E2E test for v0.1 | In progress |
+| M4 – Tasks | Task management, API tests and Flow 1 E2E test for v0.1 | Done |
 | M5 – Specialist entries | Planned for Sprint 3 and Sprint 4 | Not started |
 | M6 – Documents | Planned for Sprint 3 and Sprint 4 | Not started |
 | M7 – Weekly statistics | Planned for Sprint 3 and Sprint 4 | Not started |
@@ -86,7 +86,9 @@ Documentation work is tracked in two additional epics: SRS (12 tasks) and DESIGN
 
 Sprint 1 was not started in Jira. Sprint 2 was started later than originally planned, on November 15, 2026. The Jira board was updated to reflect the actual project progress.
 
-HIVE-87 (M4 E2E test) successfully passed in GitHub CI and is currently In Review. HIVE-23 (PMP-3) is currently In Progress. The original project scope and team responsibilities remain unchanged.
+
+HIVE-87 (Flow 1 E2E test: parent assigns a task, child completes it) was merged and runs in GitHub CI on every pull request, together with 61 API tests. M1–M4 are complete for release v0.1. The original project scope and team responsibilities remain unchanged.
+
 
 
 ## PMP-4. Progress Review: v0.2
