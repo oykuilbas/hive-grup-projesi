@@ -114,4 +114,53 @@ test('Parent cannot complete a task', async () => {
 
   expect(response.status).toBe(403);
 });
+
+test('Linked specialist can create a task', async () => {
+  const token = await tokenFor('linkedSpecialist');
+
+  const response = await request(app)
+    .post(`/api/children/${ids.childId}/tasks`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      title: 'Speech practice',
+      description: 'Practice speaking',
+      development_area: 'Language'
+    });
+
+  expect(response.status).toBe(201);
+  expect(response.body.title).toBe('Speech practice');
+});
+
+test('Child can view their own tasks', async () => {
+  const token = await tokenFor('child');
+
+  const response = await request(app)
+    .get(`/api/children/${ids.childId}/tasks`)
+    .set('Authorization', `Bearer ${token}`);
+
+  expect(response.status).toBe(200);
+  expect(Array.isArray(response.body)).toBe(true);
+});
+
+test('Unlinked specialist cannot view tasks', async () => {
+  const token = await tokenFor('unlinkedSpecialist');
+
+  const response = await request(app)
+    .get(`/api/children/${ids.childId}/tasks`)
+    .set('Authorization', `Bearer ${token}`);
+
+  expect(response.status).toBe(403);
+});
+
+test('Unlinked specialist cannot create tasks', async () => {
+  const token = await tokenFor('unlinkedSpecialist');
+
+  const response = await request(app)
+    .post(`/api/children/${ids.childId}/tasks`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ title: 'Unauthorized task' });
+
+  expect(response.status).toBe(403);
+});
+
 });
