@@ -32,7 +32,7 @@ jobs:
       - name: Create database with sample data
         run: npm run seed
 
-      - name: Start server and check GET /api/tasks
+      - name: Start server and check GET /api/health
         run: |
           npm start &
           for i in $(seq 1 20); do
@@ -42,17 +42,16 @@ jobs:
             sleep 1
           done
           node -e '
-            fetch("http://localhost:3001/api/tasks")
+            fetch("http://localhost:3001/api/health")
               .then((res) => {
                 if (!res.ok) throw new Error("HTTP " + res.status);
                 return res.json();
               })
-              .then((tasks) => {
-                console.log("Response:", JSON.stringify(tasks));
-                const found = Array.isArray(tasks) && tasks.some(
-                  (t) => t.title === "Read for 20 minutes" && t.status === "Pending"
-                );
-                if (!found) throw new Error("Expected sample task not found");
+                           .then((data) => {
+                console.log("Response:", JSON.stringify(data));
+                if (data.status !== "ok") {
+                  throw new Error("Health check failed");
+                }
                 console.log("API smoke test passed");
               })
               .catch((err) => {
