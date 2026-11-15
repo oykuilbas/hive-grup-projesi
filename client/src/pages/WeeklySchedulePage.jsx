@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '../api';
+import EventForm from '../components/EventForm';
 
 function WeeklySchedulePage() {
   const childId = window.location.pathname.split('/')[3];
@@ -93,6 +94,10 @@ const data = await api.get(
           </section>
         );
       })}
+            <EventForm
+        childId={childId}
+        onCreated={() => window.location.reload()}
+      />
     </main>
   );
 }
