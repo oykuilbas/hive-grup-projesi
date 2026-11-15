@@ -1,4 +1,5 @@
 const express = require('express');
+const assignedTaskRoutes = require('./routes/assignedTaskRoutes');
 const taskCompletionRoutes = require('./routes/taskCompletionRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const db = require('./db');
@@ -24,6 +25,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/children', taskRoutes);
 app.use('/api/tasks', taskCompletionRoutes);
+app.use('/api/tasks', assignedTaskRoutes);
 app.use('/api/children', eventRoutes);
 
 // M2 – child listing and parent-managed specialist links.
